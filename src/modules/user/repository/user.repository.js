@@ -1,16 +1,28 @@
-const db = require(`../../../helpers/database`);
-const {v4: uuidv4} = require('uuid');
+const db = require(`../../../helpers/database-DocumentClient`);
+const { v4: uuidv4 } = require('uuid');
 
 class UserRepository {
     constructor() {
-        this.tableName = 'Users';
+        this.tableName = 'PointsUsers';
+    }
+
+    async describeTable() {
+        const params = {
+            TableName: this.tableName,
+        }
+
+        await db.describeTable(params).promise();
+
+        return;
     }
 
     async findByID(UserID) {
         const params = {
             TableName: this.tableName,
             Key: {
-                UserID,
+                "UserId9023483940578234123": {
+                    "UserId": UserID,
+                },
             },
         };
 
@@ -31,27 +43,57 @@ class UserRepository {
         return params.Item;
     }
 
-    async update(UserID, data) {
+    async update(UserID, Points, data) {
+        console.log("userId REPROOOOOOOOOOOOOO........", UserID);
+        console.log("Points REPROOOOOOOOOOOOOO............", Points)
+
+        console.log("type of points......................", typeof (Points.Points))
+
         const params = {
             TableName: this.tableName,
             Key: {
-                UserID: UserID
+                "UserId9023483940578234123": UserID
             },
-            UpdateExpression: `set #Username = :Username`,
+            UpdateExpression: 'set #Points = :Points',
             ExpressionAttributeNames: {
-                '#Username': `Username`,
+                '#Points': 'Points',
             },
             ExpressionAttributeValues: {
-                ":Username": data.Username,
+                ':Points': Points.Points,
             },
-            ReturnValues: `UPDATED_NEW`,
+            ReturnValues: 'UPDATED_NEW',
         };
 
-        const update = await db.update(params).promise();
-
-        return update.Attributes;
+        try {
+            const update = await db.update(params).promise();
+            return update.Attributes;
+        } catch (error) {
+            console.error("Error updating item:", error);
+            throw error;
+        }
     }
-
+    /*
+        async update(UserID, data) {
+            const params = {
+                TableName: this.tableName,
+                Key: {
+                    UserID: UserID
+                },
+                UpdateExpression: `set #Username = :Username`,
+                ExpressionAttributeNames: {
+                    '#Username': `Username`,
+                },
+                ExpressionAttributeValues: {
+                    ":Username": data.Username,
+                },
+                ReturnValues: `UPDATED_NEW`,
+            };
+    
+            const update = await db.update(params).promise();
+    
+            return update.Attributes;
+        }
+    */
     async deleteByID(UserID) {
         const params = {
             TableName: this.tableName,

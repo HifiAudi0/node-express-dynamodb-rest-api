@@ -9,8 +9,8 @@ AWS.config.update({
 
 // When do we need DocumentClient and when do we not?
 // YES, need it for update function (patch)
-//const db = new AWS.DynamoDB.DocumentClient({ convertEmptyValues: true });
+const db = new AWS.DynamoDB.DocumentClient({ convertEmptyValues: true });
 
-const db = new AWS.DynamoDB();
+//const db = new AWS.DynamoDB();
 
 module.exports = db;

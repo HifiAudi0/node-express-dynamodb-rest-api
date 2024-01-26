@@ -2,6 +2,10 @@ const UserRepository = require(`../repository/user.repository`);
 
 class UserService {
 
+    async describeTable() {
+        return await UserRepository.describeTable()
+    }
+
     async findByID(UserID) {
         const data = await UserRepository.findByID(UserID);
 
@@ -18,9 +22,12 @@ class UserService {
         });
     }
 
-    async update(UserID, data) {
+    async update(UserID, Points, data) {
+        console.log("userId SERVICEEEEEEEEEEEEEEEEEEEE........", UserID);
+        console.log("Points SERVICEEEEEEEEEEEEEEEEEEEE............", Points)
         return await UserRepository.update(UserID, {
-            Username: data.Username
+            Username: UserID,
+            Points: Points
         });
     }
 
