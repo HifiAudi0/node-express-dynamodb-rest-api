@@ -59,7 +59,8 @@ class UserRepository {
                 '#Points': 'Points',
             },
             ExpressionAttributeValues: {
-                ':Points': Points.Points,
+                // We are getting a string (of an object) so we need to convert it to type Number
+                ':Points': parseInt(Points.Points),
             },
             ReturnValues: 'UPDATED_NEW',
         };
