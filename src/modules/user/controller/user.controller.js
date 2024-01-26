@@ -28,8 +28,8 @@ class UserController {
         console.log("userId CONTROLLERRRRRRRRRRRRR........", req.params.UserID);
         console.log("Points CONTROLLERRRRRRRRRRRRR............", req.params.Points)
         const data = await UserService.update(req.params.UserID, req.params.Points, req.body)
-
-        res.json(data)
+        var jsonData = JSON.stringify(data);
+        res.json(jsonData)
     }
 
     async deleteByID(req, res) {
