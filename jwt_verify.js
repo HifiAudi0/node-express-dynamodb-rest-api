@@ -6,7 +6,16 @@ async function verify(req, res, next) {
     if (req.headers.authorization) {
         const token = req.headers.authorization.split(' ')[1];
 
-        res.cookie('jwtToken', token, { httpOnly: true }); // We need httpOnly to protect again XSS attacks
+        res.setHeader("Content-Security-Policy", "default-src 'self'; img-src https://*; script-src 'self' https://localhost;");
+        // Content-Security-Policy
+        // May cause future issues if data if requested from other origin of websites
+        // NEED TO MODIFY this value in production environment!!
+
+        res.cookie('jwtToken', token, { httpOnly: true });
+        // We need httpOnly to protect again XSS attacks
+        // In production we use the following line, its more secure:
+        // httpOnly: true, secure: true, sameSite: 'strict'
+        // Keep in mind it will be HTTPS only and not HTTP.
 
         // Verifier that expects valid access tokens:
         const verifier = CognitoJwtVerifier.create({
