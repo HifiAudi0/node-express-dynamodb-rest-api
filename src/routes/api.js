@@ -2,9 +2,19 @@ const UserController = require('../modules/user/controller/user.controller');
 const db = require(`../helpers/database`);
 const jwt_verify = require('../../jwt_verify');
 
+
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit')
+const xss = require("xss-clean");
+
 console.log(jwt_verify)
 
+
+
 module.exports = async (app) => {
+    app.use(helmet())
+    app.use('/', rateLimit())
+    app.use(xss());
     app.use(jwt_verify);
     app.get(`/api/v1/users/describeTable`, UserController.describeTable);
     app.get(`/api/v1/users/:UserID`, UserController.findByID);

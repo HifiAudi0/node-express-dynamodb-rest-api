@@ -5,8 +5,9 @@ var cors = require('cors')
 app.use(cors())
 
 const bodyParser = require('body-parser')
+const helmet = require('helmet');
 
-
+app.use(helmet());
 
 const createServer = async () => {
     app.use(bodyParser.json())
